@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import { useLocation } from "react-router-dom";
-import getAcessToken from "../helpers/get_access_token";
-import getInfos from "../helpers/get_infos";
+import getOurTokens from "../helpers/get_our_tokens";
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
@@ -19,15 +18,13 @@ function Callback() {
   let loading = !infos;
   const fetchinfos = useCallback(async () => {
     try {
-      let { access_token } = await getAcessToken(code);
-      let data = await getInfos(access_token);
-      console.log(data)
+      let data = await getOurTokens(code);
+      console.log(data);
       setInfos(data);
-    }catch (err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
       setInfos(err);
     }
-    
   }, [code]);
   useEffect(() => {
     if (code) {
@@ -38,11 +35,12 @@ function Callback() {
   return (
     <Card className="w-25 mx-auto mt-5 text-center p-4">
       <Card.Body>
-        {infos && 
-          (<div>
-            <p>user_id: {infos.user_id}</p>
-            <p>email: {infos.email}</p>
-          </div>)}
+        {infos && (
+          <div>
+            <p>infos:</p>
+            <p>{JSON.stringify(infos, null, 2)}</p>
+          </div>
+        )}
         {loading && <Spinner animation="border" variant="primary" />}
       </Card.Body>
     </Card>
