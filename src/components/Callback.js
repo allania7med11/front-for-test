@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import getOurTokens from "../helpers/get_our_tokens";
 
 // A custom hook that builds on useLocation to parse
@@ -11,19 +11,44 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
+const DisplayObject = ({ obj }) => {
+  if (!(typeof obj === "object")) {
+    return <div className="text-secondary px-2">{obj}</div>;
+  }
+  if (Array.isArray(obj)) {
+    return (
+      <>
+        {obj.map((elm, index) => (
+          <div key={index}>
+            <DisplayObject obj={elm} />
+          </div>
+        ))}
+      </>
+    );
+  }
+  return (
+    <>
+      {Object.keys(obj).map((label, index) => (
+        <div key={index}>
+          {label}: {<DisplayObject obj={obj[label]} />}
+        </div>
+      ))}
+    </>
+  );
+};
 function Callback() {
+  const { provider } = useParams();
   let query = useQuery();
   let code = query.get("code");
   let [infos, setInfos] = useState(null);
-  let loading = !infos;
   const fetchinfos = useCallback(async () => {
     try {
-      let data = await getOurTokens(code);
+      let data = await getOurTokens(provider, code);
       console.log(data);
       setInfos(data);
     } catch (err) {
-      console.log(err);
-      setInfos(err);
+      console.log(err.response.data);
+      setInfos("err");
     }
   }, [code]);
   useEffect(() => {
@@ -33,15 +58,16 @@ function Callback() {
   }, [code]);
 
   return (
-    <Card className="w-25 mx-auto mt-5 text-center p-4">
+    <Card className="w-25 mx-auto mt-5 p-4">
       <Card.Body>
         {infos && (
           <div>
-            <p>infos:</p>
-            <p>{JSON.stringify(infos, null, 2)}</p>
+            <p>Provider: {provider}</p>
+            <p>Infos:</p>
+            <DisplayObject obj={infos} />
           </div>
         )}
-        {loading && <Spinner animation="border" variant="primary" />}
+        {!infos && <Spinner animation="border" variant="primary" />}
       </Card.Body>
     </Card>
   );

@@ -8,7 +8,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<SocialLogin />} />
-      <Route path="/accounts/google/login/callback/*" element={<Callback />} />
+      <Route path="/accounts/:provider/login/callback/*" element={<Callback />} />
     </Routes>
   );
 }

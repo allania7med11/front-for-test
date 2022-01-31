@@ -6,6 +6,14 @@ const google_params = {
   response_type: "code",
   scope: "profile email",
 };
+const facebook_base_url = "https://www.facebook.com/v6.0/dialog/oauth";
+const facebook_params = {
+  client_id:
+    "239060655045827",
+  redirect_uri: "http://localhost:3000/accounts/facebook/login/callback/",
+  response_type: "code",
+  scope: "public_profile,email",
+};
 const get_link = (base_url, params) => {
   let arr = [];
   for (let key in params) {
@@ -14,6 +22,6 @@ const get_link = (base_url, params) => {
   return `${base_url}?${arr.join("&")}`;
 };
 
-const google_link = get_link(google_base_url, google_params);
+export const google_link = get_link(google_base_url, google_params);
+export const facebook_link = get_link(facebook_base_url, facebook_params);
 
-export default google_link

@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const url = "http://localhost:8000/api/v1.0.0/auth/google/";
+const getUrl = (provider) => `http://localhost:8000/api/v1.0.0/auth/${provider}/`;
 
-const getOurTokens = async (code) => {
-  const response = await axios.post(url, {
+const getOurTokens = async (provider, code) => {
+  const response = await axios.post(getUrl(provider), {
     code,
   });
   return response.data;
