@@ -1,16 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import getOurTokens from "../helpers/get_our_tokens";
+import useQuery from "../hooks/use_query";
 
-// A custom hook that builds on useLocation to parse
-// the query string for you.
-function useQuery() {
-  const { search } = useLocation();
 
-  return React.useMemo(() => new URLSearchParams(search), [search]);
-}
 const DisplayObject = ({ obj }) => {
   if (!(typeof obj === "object")) {
     return <div className="text-secondary px-2">{obj}</div>;
